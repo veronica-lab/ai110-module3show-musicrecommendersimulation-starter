@@ -13,21 +13,40 @@ Your goal is to:
 
 Replace this paragraph with your own summary of what your version does.
 
+In this project I built a small music recommender system that suggests songs based on a user’s taste profile. My system compares song features like genre, mood, energy, and how acoustic a song is to what the user prefers. Then it gives each song a score and ranks them from best match to worst match.
+
+The goal was basically to simulate how real apps recommend music, but in a simpler way. I also tested how changing the scoring logic affects the results and reflected on how this connects to real AI systems like Spotify.
+
 ---
 
 ## How The System Works
 
-Explain your design in plain language.
+My system uses a content-based recommendation approach. That means it doesn’t look at other users, it only compares the features of each song to the user’s preferences.
 
-Some prompts to answer:
+Each `Song` includes:
+- genre  
+- mood  
+- energy (how intense the song is)  
+- tempo  
+- acousticness (acoustic vs electronic)  
 
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
+The `UserProfile` stores:
+- favorite genre  
+- favorite mood  
+- target energy  
+- whether the user prefers acoustic music or not  
 
-You can include a simple diagram or bullet list if helpful.
+To compute the score:
+- The system gives **+2 points** if the genre matches  
+- **+1.5 points** if the mood matches  
+- It gives points based on how close the energy is to the user’s target  
+- It also adds points depending on whether the song matches the user’s acoustic preference  
+
+After scoring every song, the system sorts them from highest score to lowest and returns the top 5 songs.
+
+So basically:
+User preferences → compare to every song → calculate score → rank → return best matches
+
 
 ---
 
@@ -68,25 +87,27 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Experiments You Tried
 
-Use this section to document the experiments you ran. For example:
+I ran an experiment where I changed the scoring weights. I reduced how important genre was and increased how important energy was.
 
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
+After doing that, songs that had similar energy to the user started ranking higher even if they weren’t the same genre. This made the recommendations feel more flexible, but also sometimes less accurate because genre didn’t matter as much anymore.
+
+I also tested different user profiles like:
+
+high-energy pop
+chill lofi
+intense rock
+
 
 ---
 
 ## Limitations and Risks
 
-Summarize some limitations of your recommender.
+this system has a lot of limitations because it’s very simple.
 
-Examples:
-
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
-
-You will go deeper on this in your model card.
+It only uses a small dataset (10 songs), so recommendations are limited
+It doesn’t understand lyrics, language, or meaning
+It simplifies music taste into just a few features
+It can easily over-favor one genre or type of song depending on the weights
 
 ---
 
